@@ -1,33 +1,33 @@
-const ReadThemes = require("./model");
-const GameView = require("./GameView");
+const ReadThemes = require('./model');
+const View = require('./View');
 
 class Controller {
-  static async startGame() {
-    GameView.greetings();
+  static async start() {
+    await View.greetings();
 
-    const themes = await GameModel.getThemes();
+    const themes = await ReadThemes.getThemes();
 
-    const userData = await GameView.getUserInfo(themes);
+    const userData = await View.getUserInfo(themes);
 
-    GameView.greetUser(userData.userName);
+    await View.greetUser(userData.userName);
 
-    const questions = await GameModel.loadQuestions(userData.theme);
+    const questions = await ReadThemes.loadQuestions(userData.theme);
 
     let score = 0;
     for (const q of questions) {
-      const userAnswer = await GameView.askQuestion(q);
+      const userAnswer = await View.askQuestion(q);
 
       const isTrue = userAnswer === q.correct;
 
       if (isTrue) {
         score++;
       }
-      GameView.showMiddleRes(isTrue, q);
+      View.showMiddleRes(isTrue, q);
     }
 
-    GameView.showResult(score, questions.length);
+    View.showResult(score, questions.length);
 
-    await GameModel.saveResult(userData.userName, {
+    await model.saveResult(userData.userName, {
       score,
       total: questions.length,
       theme: userData.theme,

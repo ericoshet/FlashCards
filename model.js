@@ -9,4 +9,16 @@ class ReadThemes {
       value: file,
     }));
   }
+
+  static async loadQuestions(themeFile) {
+    const content = await fsp.readFile(`./themes/${themeFile}`, 'utf-8');
+    return JSON.parse(content);
+  }
+
+  static async saveResult(userName, result) {
+    const filePath = `./statistics/${userName}-${Date.now()}.json`;
+    await fsp.writeFile(filePath, JSON.stringify(result, null, 2));
+  }
 }
+
+module.exports = ReadThemes;
